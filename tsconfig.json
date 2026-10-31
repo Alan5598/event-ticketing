@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./dist",
     "module": "commonjs",
     "target": "esnext",
     "sourceMap": true,
@@ -10,7 +9,5 @@
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  }
 }
