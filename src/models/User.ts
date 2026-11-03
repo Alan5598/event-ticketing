@@ -7,6 +7,13 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: UserRole;
+  isVerified: boolean;
+  otp?: {
+    code?: string;
+    expiresAt?: Date;
+  };
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   organizerApplication?: {
     status: "NONE" | "PENDING" | "APPROVED" | "REJECTED";
     organizationName?: string;
@@ -43,6 +50,20 @@ const userSchema = new Schema<IUser>(
       enum: ["ATTENDEE", "ORGANIZER", "ADMIN"],
       default: "ATTENDEE",
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    otp: {
+      code: { type: String },
+      expiresAt: { type: Date },
+    },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpires: {
+      type: Date,
+    },
     organizerApplication: {
       status: {
         type: String,
@@ -61,4 +82,3 @@ const userSchema = new Schema<IUser>(
 
 const User = mongoose.model<IUser>("User", userSchema);
 export default User;
-

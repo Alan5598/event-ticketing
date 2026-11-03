@@ -42,3 +42,24 @@ export const authenticate = (
   }
 };
 
+export const checkRole = (...allowedRoles: UserRole[]) => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        message: "Authentication required",
+      });
+      return;
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      res.status(403).json({
+        success: false,
+        message: `Forbidden: You do not have permission to access this resource. Required role: ${allowedRoles.join(" or ")}`,
+      });
+      return;
+    }
+
+    next();
+  };
+};

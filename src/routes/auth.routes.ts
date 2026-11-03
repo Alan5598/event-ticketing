@@ -1,12 +1,28 @@
 import { Router } from "express";
-import { register, login, getMe } from "../controllers/auth.controller";
+import {
+  register,
+  login,
+  verifyOtp,
+  resendOtp,
+  forgotPassword,
+  resetPassword,
+  getMe,
+} from "../controllers/auth.controller";
 import { authenticate } from "../middlewares/auth.middleware";
 
 const router = Router();
 
-// Registration endpoints (accepts either /register or /signup)
+// Registration endpoints
 router.post("/register", register);
 router.post("/signup", register);
+
+// OTP Verification endpoints
+router.post("/verify-otp", verifyOtp);
+router.post("/resend-otp", resendOtp);
+
+// Password recovery endpoints
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 // Login endpoint
 router.post("/login", login);
@@ -15,4 +31,3 @@ router.post("/login", login);
 router.get("/me", authenticate, getMe);
 
 export default router;
-
