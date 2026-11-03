@@ -2,6 +2,7 @@ import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
 import { connectDB } from "./config/db";
 import authRoutes from "./routes/auth.routes";
+import eventRoutes from "./routes/event.route";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -51,7 +52,7 @@ app.use((req: Request, res: Response) => {
     message: `Route not found: ${req.method} ${req.originalUrl}`,
   });
 });
-
+app.use("/api/events",eventRoutes);
 app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
   console.log(`🔐 Auth API ready at http://localhost:${port}/api/auth`);
