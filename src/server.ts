@@ -2,6 +2,7 @@ import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
 import { connectDB } from "./config/db";
 import authRoutes from "./routes/auth.routes";
+import organizerRoutes from "./routes/organizer.routes";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -27,6 +28,7 @@ connectDB();
 
 // API Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/organizers", organizerRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req: Request, res: Response) => {
@@ -55,4 +57,5 @@ app.use((req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
   console.log(`🔐 Auth API ready at http://localhost:${port}/api/auth`);
+  console.log(`📋 Organizer API ready at http://localhost:${port}/api/organizers`);
 });

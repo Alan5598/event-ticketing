@@ -1,6 +1,20 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export type UserRole = "ATTENDEE" | "ORGANIZER" | "ADMIN";
+export type ApplicationStatus = "NONE" | "PENDING" | "APPROVED" | "REJECTED";
+
+export interface IOrganizerApplication {
+  status: ApplicationStatus;
+  organizationName?: string;
+  phoneNumber?: string;
+  organizationType?: string;
+  location?: string;
+  websiteOrSocialMedia?: string;
+  description?: string;
+  rejectionReason?: string;
+  appliedAt?: Date;
+  reviewedAt?: Date;
+}
 
 export interface IUser extends Document {
   name: string;
@@ -14,15 +28,30 @@ export interface IUser extends Document {
   };
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
-  organizerApplication?: {
-    status: "NONE" | "PENDING" | "APPROVED" | "REJECTED";
-    organizationName?: string;
-    phone?: string;
-    appliedAt?: Date;
-  };
+  organizerApplication?: IOrganizerApplication;
   createdAt: Date;
   updatedAt: Date;
 }
+
+const organizerApplicationSchema = new Schema<IOrganizerApplication>(
+  {
+    status: {
+      type: String,
+      enum: ["NONE", "PENDING", "APPROVED", "REJECTED"],
+      default: "NONE",
+    },
+    organizationName: { type: String, trim: true },
+    phoneNumber: { type: String, trim: true },
+    organizationType: { type: String, trim: true },
+    location: { type: String, trim: true },
+    websiteOrSocialMedia: { type: String, trim: true },
+    description: { type: String, trim: true },
+    rejectionReason: { type: String, trim: true },
+    appliedAt: { type: Date },
+    reviewedAt: { type: Date },
+  },
+  { _id: false }
+);
 
 const userSchema = new Schema<IUser>(
   {
@@ -65,14 +94,8 @@ const userSchema = new Schema<IUser>(
       type: Date,
     },
     organizerApplication: {
-      status: {
-        type: String,
-        enum: ["NONE", "PENDING", "APPROVED", "REJECTED"],
-        default: "NONE",
-      },
-      organizationName: { type: String, trim: true },
-      phone: { type: String, trim: true },
-      appliedAt: { type: Date },
+      type: organizerApplicationSchema,
+      default: () => ({ status: "NONE" }),
     },
   },
   {
