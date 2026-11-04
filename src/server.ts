@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
 import { connectDB } from "./config/db";
+import { setupSwagger } from "./config/swagger";
 import authRoutes from "./routes/auth.routes";
 import eventRoutes from "./routes/event.route";
 
@@ -10,6 +11,8 @@ const port = process.env.PORT || 5000;
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+setupSwagger(app);
 
 // CORS configuration for frontend integration
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -30,6 +33,16 @@ connectDB();
 app.use("/api/auth", authRoutes);
 
 // Health check endpoint
+/**
+ * @openapi
+ * /api/health:
+ *   get:
+ *     tags: [System]
+ *     summary: Check API health
+ *     responses:
+ *       200:
+ *         description: API is running
+ */
 app.get("/api/health", (req: Request, res: Response) => {
   res.json({
     status: "ok",
@@ -41,9 +54,11 @@ app.get("/api/health", (req: Request, res: Response) => {
 app.get("/", (req: Request, res: Response) => {
   res.json({
     message: "Event Ticketing API is running...",
-    docs: "/api/health",
+    docs: "/api/docs",
   });
 });
+
+app.use("/api/events", eventRoutes);
 
 // 404 handler
 app.use((req: Request, res: Response) => {
@@ -52,8 +67,8 @@ app.use((req: Request, res: Response) => {
     message: `Route not found: ${req.method} ${req.originalUrl}`,
   });
 });
-app.use("/api/events",eventRoutes);
 app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
   console.log(`🔐 Auth API ready at http://localhost:${port}/api/auth`);
+  console.log(`📚 API documentation at http://localhost:${port}/api/docs`);
 });

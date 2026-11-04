@@ -1,34 +1,35 @@
-import {Request, Response} from "express";
+import { Response } from "express";
 import {z} from "zod";
-import eventService from "../service/event.service";
+import { AuthenticatedRequest } from "../middlewares/auth.middleware";
+import { createEvent as createEventRecord } from "../services/event.service";
 
 const createEventSchema = 
 z.object({
-    title:z.String().trim().min(3).max(100),
+    title:z.string().trim().min(3).max(100),
     description: z.string().trim().min(10).max(5000),
-    category:z.enum({
-        "tech", "music","kids","sports","business","culture","arts","food",
-        "education","other"
-    }),
+    category:z.enum(["tech", "music","kids","sports","business","culture","arts","food",
+        "education","other"]
+        
+    ),
     startTime:z.coerce.date(),
-    endTime:z.coerce.date(),
+    endTime:z.coerce.date().optional(),
     venue:z.string().trim().min(2).max(200),
     capacity:z.number().int().min(1).max(100000)
 })
 .strict();
-export async function createEvent(req:Request,res :Response) {
+export async function createEvent(req: AuthenticatedRequest, res: Response) {
     const result = createEventSchema.safeParse(req.body);
 
     if(!result.success) {
         const issue = result.error.issues[0];
         const field = issue?.path.join("." ) || "body";
         return res.status(400).json({
-            error: {code:"Validation_error",message:'${field}: ${issue?.message}'},
+            error: {code:"Validation_error",message:`${field}: ${issue?.message}`},
 
         });
     }
 
-    const data = result.date;
+    const data = result.data;
     if(data.startTime <= new Date()){
         return res.status (400).json({
             error: {
@@ -44,7 +45,6 @@ export async function createEvent(req:Request,res :Response) {
         });
     
     }
-    const event = await eventService.createEvent(String (req.user!.id),data);
+    const event = await createEventRecord(String(req.user!.id), data);
     res.status(201).json({event});
 }
-

@@ -12,7 +12,7 @@ import mongoose,{Document,Schema} from "mongoose";
     id? : mongoose.Types.ObjectId;
     question :string;
     answer: string;
-    source: "Organizer" | "VisitorQuestion";
+    source: "organizer" | "visitorQuestion";
     createdAt : Date;
 
  }
@@ -32,7 +32,7 @@ import mongoose,{Document,Schema} from "mongoose";
     cancelledAt?: Date;
     cancelReason?: string;
     details :{
-        Schedule?: string;
+        schedule?: string;
         directionsParking?:string;
         whatToBring?: string;
         ageLimits?:string;
@@ -90,4 +90,3 @@ eventSchema.index({ status: 1, startTime: 1 });
 const Event = mongoose.model<IEvent>("Event", eventSchema);
 
 export default Event;
- 
