@@ -9,13 +9,11 @@ import organizerRoutes from "./routes/organizer.routes";
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 setupSwagger(app);
 
-// CORS configuration for frontend integration
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
@@ -27,14 +25,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Connect to Database
+
 connectDB();
 
-// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/organizers", organizerRoutes);
 
-// Health check endpoint
 /**
  * @openapi
  * /api/health:
@@ -62,7 +58,6 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/events", eventRoutes);
 
-// 404 handler
 app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,
@@ -70,8 +65,8 @@ app.use((req: Request, res: Response) => {
   });
 });
 app.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}`);
-  console.log(`🔐 Auth API ready at http://localhost:${port}/api/auth`);
-  console.log(`📚 API documentation at http://localhost:${port}/api/docs`);
-  console.log(`📋 Organizer API ready at http://localhost:${port}/api/organizers`);
+  console.log(` Server running on http://localhost:${port}`);
+  console.log(` Auth API ready at http://localhost:${port}/api/auth`);
+  console.log(` API documentation at http://localhost:${port}/api/docs`);
+  console.log(` Organizer API ready at http://localhost:${port}/api/organizers`);
 });

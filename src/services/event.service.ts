@@ -1,4 +1,4 @@
-import Event, { IEvent } from "../models/event";
+import Event, { IEvent } from "../models/Event";
 
 
 type NewEventData = {
