@@ -4,6 +4,7 @@ import { connectDB } from "./config/db";
 import { setupSwagger } from "./config/swagger";
 import authRoutes from "./routes/auth.routes";
 import eventRoutes from "./routes/event.route";
+import organizerRoutes from "./routes/organizer.routes";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -31,6 +32,7 @@ connectDB();
 
 // API Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/organizers", organizerRoutes);
 
 // Health check endpoint
 /**
@@ -71,4 +73,5 @@ app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
   console.log(`🔐 Auth API ready at http://localhost:${port}/api/auth`);
   console.log(`📚 API documentation at http://localhost:${port}/api/docs`);
+  console.log(`📋 Organizer API ready at http://localhost:${port}/api/organizers`);
 });
